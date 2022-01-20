@@ -25,6 +25,10 @@ class Room(models.Model):
     updated = models.DateTimeField(auto_now = True) # takes timestamp when is called/update [>= ONCE]
     created = models.DateTimeField(auto_now_add = True) # takes a timestamp when method is created [ONCE]
 
+    class Meta:
+        ordering = ['-updated', '-created']
+        # (-) Reverse ordering -> most updated Rooms will be showed first
+
     def __str__(self):
         return str(self.name)
 
