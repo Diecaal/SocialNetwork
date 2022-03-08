@@ -24,7 +24,7 @@ class Room(models.Model):
     topic = models.ForeignKey(Topic, on_delete=models.SET_NULL, null=True)
     name = models.CharField(max_length=200)
     description = models.TextField(null=True, blank=True)  # allow empty field
-    # participants =
+    participants = models.ManyToManyField(User, related_name='participants', blank=True)
     # takes timestamp when is called/update [>= ONCE]
     updated = models.DateTimeField(auto_now=True)
     # takes a timestamp when method is created [ONCE]
