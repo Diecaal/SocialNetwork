@@ -5,42 +5,28 @@
 <style>
     .home-container {
         display: grid;
-        grid-template-columns: 1fr 3fr;
+        grid-template-columns: 1fr 3fr 1fr;
+        /* Left-Right Columns will take 1 fraction. Middle one will take 3 being the largest */
     }
 </style>
 
 <div class="home-container">
-
+    <!-- Topics list section -->
     <div>
-        <h3>Browse Topics</h3>
-        <div>
-            <a href="{% url 'home' %}">All Topics</a>
-        </div>
-        {% for topic in topics %}
-        <div>
-            <a href="{% url 'home' %}?q={{topic.name}}">{{topic.name}}</a>
-        </div>
-        {% endfor %}
+        {% include 'base/topics_component.html' %}
     </div>
 
+    <!-- Rooms list section -->
     <div>
         <h5>{{room_count_info}}</h5>
         <a href="{% url 'create-room' %}">Create a Room</a>
 
-        <div>
-            {% for room in rooms %}
-            <div>
-                {% if request.user == room.host %}
-                <a href="{% url 'update-room' room.id %}">Edit</a>
-                <a href="{% url 'delete-room' room.id %}">Delete</a>
-                {% endif %}
-                <span>@{{ room.host }}</span>
-                <h5>{{ room.id }} --> <a href="{% url 'room' room.id %}">{{ room.name }}</a></h5>
-                <small>{{ room.topic.name }}</small>
-                <hr>
-            </div>
-            {% endfor %}
-        </div>
+        {% include 'base/feed_component.html' %}
+    </div>
+
+    <!-- Recent activity feed section -->
+    <div class="feed-container">
+        {% include 'base/activity_component.html' %}
     </div>
 
 </div>
