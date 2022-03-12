@@ -34,7 +34,6 @@ def loginPage(request):
         else:
             messages.error(request, 'Username or Password does not exist')
     context = {'page': page}
-    print(page)
     return render(request, 'base/login_register.html', context)
 
 
@@ -119,7 +118,11 @@ def create_room(request):
     if(request.method == 'POST'):
         form = RoomForm(request.POST)
         if(form.is_valid()):
-            form.save()
+            room = form.save(commit=False)
+            room.host = request.user
+            room.save()
+            # First room must be created
+            room.participants.add(request.user)
             return redirect('home')
 
     context = {'form': form}
