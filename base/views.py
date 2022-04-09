@@ -12,6 +12,7 @@ from .forms import RoomForm, UserForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 
+
 # Create views to be returned here
 
 
@@ -21,7 +22,7 @@ def loginPage(request):
     if request.user.is_authenticated:
         return redirect('home')
 
-    if(request.method == 'POST'):
+    if (request.method == 'POST'):
         username = request.POST.get('username').lower()
         password = request.POST.get('password')
         try:
@@ -30,7 +31,7 @@ def loginPage(request):
             messages.error(request, 'User does not exist')
         # If everything correct, authenticate user with given data
         user = authenticate(request, username=username, password=password)
-        if(user is not None):
+        if (user is not None):
             login(request, user)
             return redirect('home')
         else:
@@ -63,7 +64,7 @@ def registerUser(request):
 
 def home(request):
     # Default behaviour will return all topics
-    q = request.GET.get('q') if request.GET.get('q') != None else ''
+    q = request.GET.get('q') if request.GET.get('q') is not None else ''
     # Search room by their TOPIC name, NAME and DESCRIPTION
     rooms = Room.objects.filter(
         Q(topic__name__icontains=q) |
@@ -71,7 +72,7 @@ def home(request):
         Q(description__icontains=q)
     )
 
-    topics = Topic.objects.all()
+    topics = Topic.objects.all()[0:5]
     room_count_info = f'{rooms.count()} rooms for: {q}' if q != '' else f'{rooms.count()} Rooms Open!'
     # When user search for a topic, messages feed will only be about that topic
     room_messages = Message.objects.filter(Q(room__topic__name__icontains=q))
@@ -117,7 +118,7 @@ def user_profile(request, pk):
 def create_room(request):
     form = RoomForm()
     topics = Topic.objects.all()
-    if(request.method == 'POST'):
+    if (request.method == 'POST'):
         topic_name = request.POST.get('topic')
         # Created == True, if topic_name did not exist previously
         topic, created = Topic.objects.get_or_create(name=topic_name)
@@ -150,7 +151,7 @@ def update_room(request, pk):
     if request.user != room.host:
         return HttpResponse('You are not allowed to do this actions')
 
-    if(request.method == 'POST'):
+    if (request.method == 'POST'):
         topic_name = request.POST.get('topic')
         # Created == True, if topic_name did not exist previously
         topic, created = Topic.objects.get_or_create(name=topic_name)
@@ -173,7 +174,7 @@ def delete_room(request, pk):
         return HttpResponse('You are not allowed to do this actions')
 
     # Room has been actually deleted
-    if(request.method == 'POST'):
+    if (request.method == 'POST'):
         room.delete()
         return redirect('home')
 
@@ -187,7 +188,7 @@ def delete_message(request, pk):
     if request.user != message.user:
         return HttpResponse('You are not allowed to do this actions')
 
-    if(request.method == 'POST'):
+    if (request.method == 'POST'):
         message.delete()
         return redirect('home')
 
@@ -200,10 +201,23 @@ def update_user(request):
     user = request.user
     form = UserForm(instance=user)
 
-    if(request.method == 'POST'):
+    if (request.method == 'POST'):
         form = UserForm(request.POST, instance=user)
-        if(form.is_valid()):
+        if (form.is_valid()):
             form.save()
             return redirect('user-profile', pk=user.id)
     context = {'form': form}
     return render(request, 'base/update-user.html', context=context)
+
+
+def topics_page(request):
+    q = request.GET.get('q') if request.GET.get('q') is not None else ''
+    topics = Topic.objects.filter(name__icontains=q)
+    page_context = {'topics': topics}
+    return render(request, 'base/topics.html', context=page_context)
+
+
+def activity_page(request):
+    room_messages = Message.objects.all()
+    page_context = {'room_messages': room_messages}
+    return render(request, 'base/activity.html', context=page_context)
