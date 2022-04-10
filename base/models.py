@@ -5,9 +5,9 @@ from django.contrib.auth.models import User
 
 
 class Topic(models.Model):
-    '''
+    """
     A topic which will be assigned to one or more rooms
-    '''
+    """
     name = models.CharField(max_length=200)
 
     def __str__(self):
@@ -15,9 +15,9 @@ class Topic(models.Model):
 
 
 class Room(models.Model):
-    '''
+    """
     Room class that will hold messages about a specific topic
-    '''
+    """
     # id = we can add the usage as UID for example
     host = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     # if we use SET_NULL approach, specificy that database can contain null for that value
@@ -39,9 +39,9 @@ class Room(models.Model):
 
 
 class Message(models.Model):
-    '''
+    """
     Message created by a user assigned to a room
-    '''
+    """
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     # When parent (room) all children (messages) will be deleted
     room = models.ForeignKey(Room, on_delete=models.CASCADE)

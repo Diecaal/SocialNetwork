@@ -1,0 +1,32 @@
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from base.models import Room
+from .serializers import RoomSerializer
+
+
+@api_view(['GET'])
+def get_routes(request):
+    """
+    Function that returns all routes in our website
+    """
+    routes = [
+        'GET /api/',
+        'GET /api/rooms',
+        'GET /api/rooms/:id'
+    ]
+    # Dictionaries can be serialized as JSON automatically
+    return Response(routes)
+
+
+@api_view(['GET'])
+def get_rooms(request):
+    rooms = Room.objects.all()
+    serializer = RoomSerializer(rooms, many=True)
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+def get_room(request, pk):
+    rooms = Room.objects.get(id=pk)
+    serializer = RoomSerializer(rooms, many=False)
+    return Response(serializer.data)
