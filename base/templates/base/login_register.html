@@ -14,10 +14,10 @@
         <form class="form" action="" method="POST">
             {% csrf_token %}
           <div class="form__group form__group">
-            <label for="room_name">Username</label>
+            <label for="room_name">Email</label>
             <input
               id="username"
-              name="username"
+              name="email"
               type="text"
               placeholder="e.g Diecaal"
             />
@@ -102,7 +102,7 @@
 
         <div class="auth__action">
           <p>Already signed up?</p>
-          <a href="{% url 'login' %}" class="btn btn--link">Sign Up</a>
+          <a href="{% url 'login' %}" class="btn btn--link">Log In</a>
         </div>
       </div>
     </div>

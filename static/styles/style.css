@@ -1107,13 +1107,18 @@ a {
   background: transparent;
 }
 
-.room__message > form > input {
+.room__message > form {
+  display: grid;
+  grid-template-columns: 85% 15%;
+}
+
+.room__message > form > input, button {
   resize: none;
   background-color: var(--color-dark-light);
   color: var(--color-light);
-  border: none;
   outline: none;
   border-radius: 0.7rem;
+  border: none;
   height: 4.5rem;
   width: 100%;
   margin-top: -1rem;
@@ -1121,6 +1126,12 @@ a {
   font-size: 1.4rem;
   font-weight: 500;
   position: relative;
+}
+
+.room__message > form > button {
+  border-radius: 0.7rem;
+  border-style: solid;
+  border-color: white;
 }
 
 .room__message > form > input::placeholder {
